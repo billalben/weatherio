@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# weatherio
+
+A weather app providing current conditions and forecasts for cities around the world, powered by the OpenWeatherMap API.
+
+## Features
+
+- **Modern, responsive design** — works on all devices (768px / 1200px / 1400px breakpoints).
+- **5-day forecast** for any city.
+- **Today's highlights** — Air Quality Index, Sunrise & Sunset, Humidity, Pressure, Visibility, and Feels Like.
+- **Search bar** with city suggestions and debounce (600ms) to avoid spamming the API.
+- **Current location** button using the browser's geolocation API.
+- **Shareable URLs** — the location is stored in the URL query string (`/?lat=...&lon=...`).
+- **API key kept server-side** — all OpenWeatherMap calls go through Next.js Route Handlers, so the key never reaches the browser.
 
 ## Getting Started
 
-First, run the development server:
+Create `.env.local` with your OpenWeatherMap API key:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+echo "WEATHER_API_KEY=your_api_key_here" > .env.local
+```
+
+Run the development server:
+
+```bash
 pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+app/
+  layout.tsx               # Root layout, Nunito Sans font, metadata
+  page.tsx                 # Weather page (client component, reads lat/lon from search params)
+  globals.css              # Tailwind v4 theme + Material Symbols font + custom CSS
+  not-found.tsx            # 404 page
+  api/weather/             # Route handlers proxying the OpenWeatherMap API
+    current/route.ts       #   GET ?lat&lon
+    forecast/route.ts      #   GET ?lat&lon
+    air-pollution/route.ts #   GET ?lat&lon
+    reverse-geocoding/     #   GET ?lat&lon
+    geo-coding/route.ts    #   GET ?query
+components/                # Header, SearchBar, CurrentWeather, Highlights,
+                           # HourlyForecast, FiveDayForecast, Footer, Loading, WeatherApp
+lib/
+  weather/                 # Types + server-only OpenWeatherMap client
+  utils/format.ts          # Date/time helpers and AQI text
+  location.ts              # Default location
+```
 
-## Learn More
+## Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Next.js 16** (App Router, Route Handlers)
+- **React 19**
+- **Tailwind CSS v4**
+- **TypeScript**
+- **OpenWeatherMap API**
 
 ## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The easiest way to deploy is to use the [Vercel Platform](https://vercel.com/new) and set `WEATHER_API_KEY` as an environment variable in your project settings.
