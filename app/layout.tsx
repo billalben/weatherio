@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
 
@@ -8,9 +8,35 @@ const nunitoSans = Nunito_Sans({
   weight: ["400", "600"],
 });
 
+const SITE_URL = "https://weatherio.billalbenz.com";
+const SITE_NAME = "weatherio";
+const SITE_DESCRIPTION = "weatherio is a weather app made by billal benzazoua";
+
 export const metadata: Metadata = {
-  title: "weatherio",
-  description: "weatherio is a weather app made by billal benzazoua",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  openGraph: {
+    type: "website",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#131214",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

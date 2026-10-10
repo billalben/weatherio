@@ -11,7 +11,7 @@ export default function Footer() {
           href="https://openweathermap.org/api"
           title="Free OpenWeather Api"
           target="_blank"
-          rel="noopener"
+          rel="noopener noreferrer"
         >
           <img
             src="/images/openweather.png"

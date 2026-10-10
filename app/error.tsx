@@ -3,10 +3,10 @@
 import Link from "next/link";
 
 export default function Error({
-  reset,
+  retry,
 }: {
   error: Error & { digest?: string };
-  reset: () => void;
+  retry: () => void;
 }) {
   return (
     <section className="error-content fixed inset-0 z-8 flex flex-col items-center justify-center bg-background">
@@ -16,7 +16,7 @@ export default function Error({
         <button
           type="button"
           className="btn-primary has-state"
-          onClick={() => reset()}
+          onClick={() => retry()}
         >
           <span className="span">Try again</span>
         </button>
