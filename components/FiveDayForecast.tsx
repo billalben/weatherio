@@ -1,34 +1,43 @@
-import { monthNames, weekDayNames } from "@/lib/utils/format";
-import type { Forecast } from "@/lib/weather/types";
+import { getForecastDay } from "@/lib/utils/format";
+import type { Forecast, ForecastEntry } from "@/lib/weather/types";
 
 interface FiveDayForecastProps {
   forecast: Forecast;
 }
 
-interface ForecastEntry {
-  temp_max: number;
-  icon: string;
-  description: string;
-  date: Date;
+interface DayGroup {
+  day: ReturnType<typeof getForecastDay>;
+  entries: { entry: ForecastEntry; hour: number }[];
 }
 
 export default function FiveDayForecast({ forecast }: FiveDayForecastProps) {
-  const entries: ForecastEntry[] = [];
+  const { timezone } = forecast.city;
+  const groups = new Map<string, DayGroup>();
 
-  for (let i = 7; i < forecast.list.length; i += 8) {
-    const {
-      main: { temp_max },
-      weather,
-      dt_txt,
-    } = forecast.list[i];
-    const [{ icon, description }] = weather;
-    entries.push({
-      temp_max,
-      icon,
-      description,
-      date: new Date(dt_txt),
-    });
+  for (const entry of forecast.list) {
+    const day = getForecastDay(entry.dt, timezone);
+    const group = groups.get(day.key);
+    if (group) {
+      group.entries.push({ entry, hour: day.hour });
+    } else {
+      groups.set(day.key, { day, entries: [{ entry, hour: day.hour }] });
+    }
   }
+
+  const days = Array.from(groups.values())
+    .slice(0, 5)
+    .map(({ day, entries }) => {
+      const closest = entries.reduce((closest, current) =>
+        Math.abs(current.hour - 12) < Math.abs(closest.hour - 12)
+          ? current
+          : closest,
+      );
+      const [{ icon, description }] = closest.entry.weather;
+      const temp_max = Math.max(
+        ...entries.map(({ entry }) => entry.main.temp_max),
+      );
+      return { day, icon, description, temp_max };
+    });
 
   return (
     <>
@@ -37,9 +46,9 @@ export default function FiveDayForecast({ forecast }: FiveDayForecastProps) {
       </h2>
       <div className="card card-lg forecast-card">
         <ul>
-          {entries.map(({ temp_max, icon, description, date }) => (
+          {days.map(({ day, icon, description, temp_max }) => (
             <li
-              key={date.toISOString()}
+              key={day.key}
               className="card-item mb-3 flex items-center md:mb-4"
             >
               <div className="icon-wrapper flex items-center gap-2">
@@ -56,10 +65,10 @@ export default function FiveDayForecast({ forecast }: FiveDayForecastProps) {
                 </span>
               </div>
               <p className="label-1 flex-1 text-right font-semibold text-on-surface-variant">
-                {date.getDate()} {monthNames[date.getUTCMonth()]}
+                {day.day} {day.month}
               </p>
               <p className="label-1 flex-1 text-right font-semibold text-on-surface-variant">
-                {weekDayNames[date.getUTCDay()]}
+                {day.weekDay}
               </p>
             </li>
           ))}

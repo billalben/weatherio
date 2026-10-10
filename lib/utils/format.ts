@@ -30,6 +30,29 @@ export const getDate = (dateUnix: number, timezone: number) => {
   return `${weekDayName} ${date.getUTCDate()}, ${monthName}`;
 };
 
+export interface ForecastDay {
+  key: string;
+  day: number;
+  month: string;
+  weekDay: string;
+  hour: number;
+}
+
+export const getForecastDay = (
+  dateUnix: number,
+  timezone: number,
+): ForecastDay => {
+  const date = new Date((dateUnix + timezone) * 1000);
+  const month = date.getUTCMonth();
+  return {
+    key: `${date.getUTCFullYear()}-${month}-${date.getUTCDate()}`,
+    day: date.getUTCDate(),
+    month: monthNames[month],
+    weekDay: weekDayNames[date.getUTCDay()],
+    hour: date.getUTCHours(),
+  };
+};
+
 export const getTime = (dateUnix: number, timezone: number) => {
   const date = new Date((dateUnix + timezone) * 1000);
   const hours = date.getUTCHours();
