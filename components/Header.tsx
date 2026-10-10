@@ -1,24 +1,46 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import SearchBar from "./SearchBar";
+import { DEFAULT_LOCATION } from "@/lib/location";
 
-interface HeaderProps {
-  onSelectLocation: (lat: string, lon: string) => void;
-  onCurrentLocation: () => void;
-  locating: boolean;
-}
-
-export default function Header({
-  onSelectLocation,
-  onCurrentLocation,
-  locating,
-}: HeaderProps) {
+export default function Header() {
+  const router = useRouter();
   const [searchOpen, setSearchOpen] = useState(false);
+  const [locating, setLocating] = useState(false);
 
   const toggleSearch = () => setSearchOpen((open) => !open);
   const closeSearch = () => setSearchOpen(false);
+
+  const updateLocation = useCallback(
+    (lat: string, lon: string) => {
+      router.replace(`/?lat=${lat}&lon=${lon}`);
+    },
+    [router],
+  );
+
+  const goToCurrentLocation = useCallback(() => {
+    if (!navigator.geolocation) {
+      updateLocation(DEFAULT_LOCATION.lat, DEFAULT_LOCATION.lon);
+      return;
+    }
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocating(false);
+        updateLocation(
+          String(position.coords.latitude),
+          String(position.coords.longitude),
+        );
+      },
+      () => {
+        setLocating(false);
+        updateLocation(DEFAULT_LOCATION.lat, DEFAULT_LOCATION.lon);
+      },
+    );
+  }, [updateLocation]);
 
   return (
     <header className="header">
@@ -38,7 +60,7 @@ export default function Header({
           open={searchOpen}
           onToggle={toggleSearch}
           onClose={closeSearch}
-          onSelectLocation={onSelectLocation}
+          onSelectLocation={updateLocation}
         />
 
         <div className="header-actions flex items-center gap-4">
@@ -55,7 +77,7 @@ export default function Header({
             type="button"
             className={`btn-primary has-state ${locating ? "is-disabled" : ""}`}
             aria-disabled={locating}
-            onClick={onCurrentLocation}
+            onClick={goToCurrentLocation}
           >
             <span className="m-icon">my_location</span>
             <span className="span">Current Location</span>

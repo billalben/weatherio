@@ -1,11 +1,18 @@
 import { Suspense } from "react";
-import WeatherApp from "@/components/WeatherApp";
+import Header from "@/components/Header";
+import WeatherContent from "@/components/WeatherContent";
 import Loading from "@/components/Loading";
 
-export default function Page() {
+export default function Page(props: PageProps<"/">) {
   return (
-    <Suspense fallback={<Loading />}>
-      <WeatherApp />
-    </Suspense>
+    <>
+      <Header />
+
+      <main>
+        <Suspense fallback={<Loading />}>
+          <WeatherContent searchParams={props.searchParams} />
+        </Suspense>
+      </main>
+    </>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { searchCities } from "@/lib/weather/actions";
 import type { GeoLocation } from "@/lib/weather/types";
 
 const SEARCH_TIMEOUT_DURATION = 600;
@@ -48,10 +49,7 @@ export default function SearchBar({
 
     timeoutRef.current = setTimeout(async () => {
       try {
-        const res = await fetch(
-          `/api/weather/geo-coding?query=${encodeURIComponent(value)}`,
-        );
-        const data = await res.json();
+        const data = await searchCities(value);
         setResults(Array.isArray(data) ? data : []);
       } catch {
         setResults([]);
