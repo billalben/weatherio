@@ -18,8 +18,6 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
-    // Legacy project kept for reference (not part of the Next.js app).
-    "old-project/**",
   ]),
 ]);
 
