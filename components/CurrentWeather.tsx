@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { getDate } from "@/lib/utils/format";
 import type {
   CurrentWeather as CurrentWeatherData,
@@ -24,7 +23,7 @@ export default function CurrentWeather({
         <p className="heading">
           {Math.trunc(current.main.temp)}&deg;<sup>c</sup>
         </p>
-        <Image
+        <img
           src={`/weather_icons/${icon}.png`}
           width={64}
           height={64}

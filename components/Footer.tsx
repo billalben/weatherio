@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 export default function Footer() {
   return (
     <footer className="footer mt-7 mb-6 flex flex-wrap items-center justify-center gap-3 gap-x-6 text-center text-on-surface-variant">
@@ -15,7 +13,7 @@ export default function Footer() {
           target="_blank"
           rel="noopener"
         >
-          <Image
+          <img
             src="/images/openweather.png"
             width={150}
             height={30}

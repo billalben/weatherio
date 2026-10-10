@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { getHours, mpsToKmh } from "@/lib/utils/format";
 import type { Forecast } from "@/lib/weather/types";
 
@@ -20,7 +19,7 @@ export default function HourlyForecast({ forecast }: HourlyForecastProps) {
               <li key={data.dt} className="slider-item min-w-27.5">
                 <div className="card card-sm slider-card text-center">
                   <p className="body-3">{getHours(data.dt, city.timezone)}</p>
-                  <Image
+                  <img
                     src={`/weather_icons/${icon}.png`}
                     width={48}
                     height={48}
@@ -40,7 +39,7 @@ export default function HourlyForecast({ forecast }: HourlyForecastProps) {
             <li key={data.dt} className="slider-item min-w-27.5">
               <div className="card card-sm slider-card text-center">
                 <p className="body-3">{getHours(data.dt, city.timezone)}</p>
-                <Image
+                <img
                   src="/weather_icons/direction.png"
                   width={48}
                   height={48}

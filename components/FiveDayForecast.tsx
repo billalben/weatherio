@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { monthNames, weekDayNames } from "@/lib/utils/format";
 import type { Forecast } from "@/lib/weather/types";
 
@@ -44,7 +43,7 @@ export default function FiveDayForecast({ forecast }: FiveDayForecastProps) {
               className="card-item mb-3 flex items-center md:mb-4"
             >
               <div className="icon-wrapper flex items-center gap-2">
-                <Image
+                <img
                   src={`/weather_icons/${icon}.png`}
                   width={36}
                   height={36}

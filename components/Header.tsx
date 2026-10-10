@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import SearchBar from "./SearchBar";
 
@@ -25,12 +24,12 @@ export default function Header({
     <header className="header">
       <div className="container flex items-center justify-between">
         <Link href="/" className="logo block">
-          <Image
+          <img
             src="/images/logo.png"
             alt="logo"
             width={364}
             height={58}
-            priority
+            fetchPriority="high"
             className="h-auto w-37.5"
           />
         </Link>
